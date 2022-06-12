@@ -40,4 +40,4 @@ jobs:
               uses: ncipollo/release-action@v1.5.0
               with:
                 artifacts: "build/*.jar"
-                token: ${{ secrets.GIT_RElEASE_TOKEN }}
+                token: ${{ secrets.GIT_RELEASE_TOKEN }}
