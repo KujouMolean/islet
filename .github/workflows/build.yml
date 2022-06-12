@@ -36,8 +36,7 @@ jobs:
                   git config --global user.name "Github Actions"
                   ./gradlew applyPatches --stacktrace
                   ./gradlew build --stacktrace
-            - name: Release jar
-              uses: ncipollo/release-action@v1.5.0
+            - uses: actions/upload-artifact@v3
               with:
-                artifacts: "build/*.jar"
-                token: ${{ secrets.GIT_RELEASE_TOKEN }}
+                name: my-artifact
+                path: build/
