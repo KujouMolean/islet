@@ -13,20 +13,38 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          ./gradlew applyPatches
-          ./gradlew createReobfBundlerJar
+    build:
+        # Only run on PRs if the source branch is on someone else's repo
+        if: ${{ github.event_name != 'pull_request' || github.repository != github.event.pull_request.head.repo.full_name }}
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                java: [17]
+            fail-fast: true
+        steps:
+            - uses: actions/checkout@v2.4.0
+            - name: JDK ${{ matrix.java }}
+              uses: actions/setup-java@v3.1.0
+              with:
+                  java-version: ${{ matrix.java }}
+                  cache: 'gradle'
+                  distribution: 'temurin'
+            - name: Patch and build
+              run: |
+                  git config --global user.email "no-reply@github.com"
+                  git config --global user.name "Github Actions"
+                  ./gradlew applyPatches --stacktrace
+                  ./gradlew createReobfBundlerJar --stacktrace
+            - uses: actions/upload-artifact@v3
+              with:
+                name: my-artifact
+                path: build/libs/islet-bundler-*-SNAPSHOT-reobf.jar
+            - uses: "marvinpinto/action-automatic-releases@latest"
+              with:
+                repo_token: "${{ secrets.GIT_RELEASE_TOKEN }}"
+                automatic_release_tag: "latest"
+                prerelease: true
+                title: "Development Build"
+                files: |
+                  build/libs/*.jar
