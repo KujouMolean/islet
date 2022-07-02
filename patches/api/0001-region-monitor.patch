@@ -1,0 +1,148 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Molean <cnmolean@gmail.com>
+Date: Sun, 3 Jul 2022 01:08:56 +0800
+Subject: [PATCH] region monitor
+
+
+diff --git a/src/main/java/com/molean/regionmonitor/RegionMonitor.java b/src/main/java/com/molean/regionmonitor/RegionMonitor.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..c19f9e75b6473c281e5a39629327b848f3ff365f
+--- /dev/null
++++ b/src/main/java/com/molean/regionmonitor/RegionMonitor.java
+@@ -0,0 +1,63 @@
++package com.molean.regionmonitor;
++
++import java.util.Deque;
++import java.util.LinkedList;
++
++public class RegionMonitor {
++    private RegionMonitorManager regionMonitorManager;
++    private final int x;
++    private final int z;
++
++    private Deque<RegionTickData> queue = new LinkedList<>();
++
++    public static class RegionTickData {
++        long tick;
++        long nanoTime;
++        long lastStart;
++
++        public long getTick() {
++            return tick;
++        }
++
++        public long getNanoTime() {
++            return nanoTime;
++        }
++    }
++
++    public RegionMonitor(RegionMonitorManager manager, int x, int z) {
++        this.x = x;
++        this.z = z;
++    }
++
++    public void startTick(long currentTick) {
++        RegionTickData regionTickData;
++        if (!queue.isEmpty() && queue.getLast().tick == currentTick) {
++            regionTickData = queue.getLast();
++        } else {
++            regionTickData = new RegionTickData();
++            regionTickData.tick = currentTick;
++            queue.addLast(regionTickData);
++            while (!queue.isEmpty() && currentTick - queue.getFirst().tick > 1200) {
++                queue.removeFirst();
++            }
++        }
++        regionTickData.lastStart = System.nanoTime();
++    }
++
++    public void stopTick() {
++        RegionTickData last = queue.getLast();
++        last.nanoTime += System.nanoTime() - last.lastStart;
++    }
++
++    public int getX() {
++        return x;
++    }
++
++    public int getZ() {
++        return z;
++    }
++
++    public Deque<RegionTickData> getQueue() {
++        return queue;
++    }
++}
+diff --git a/src/main/java/com/molean/regionmonitor/RegionMonitorManager.java b/src/main/java/com/molean/regionmonitor/RegionMonitorManager.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..94130a9ac06d4d65a7ed660f3ddb7c3b249184ad
+--- /dev/null
++++ b/src/main/java/com/molean/regionmonitor/RegionMonitorManager.java
+@@ -0,0 +1,24 @@
++package com.molean.regionmonitor;
++
++import java.util.HashMap;
++import java.util.Map;
++
++public enum RegionMonitorManager {
++    INSTANCE;
++
++    private long tick;
++
++    private final Map<RegionPos, RegionMonitor> regionMonitorMap = new HashMap<>();
++
++    public Map<RegionPos, RegionMonitor> getRegionMonitorMap() {
++        return regionMonitorMap;
++    }
++
++    public RegionMonitor get(int x, int z) {
++        RegionPos regionPos = new RegionPos(x, z);
++        if (!regionMonitorMap.containsKey(regionPos)) {
++            regionMonitorMap.put(regionPos, new RegionMonitor(this, x, z));
++        }
++        return regionMonitorMap.get(regionPos);
++    }
++}
+diff --git a/src/main/java/com/molean/regionmonitor/RegionPos.java b/src/main/java/com/molean/regionmonitor/RegionPos.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..8896325174dba7e22726fb74033e379b0dc3ad34
+--- /dev/null
++++ b/src/main/java/com/molean/regionmonitor/RegionPos.java
+@@ -0,0 +1,37 @@
++package com.molean.regionmonitor;
++
++public class RegionPos {
++    private int x;
++    private int z;
++
++    public RegionPos(int x, int z) {
++        this.x = x;
++        this.z = z;
++    }
++
++    @Override
++    public String toString() {
++        return "RegionPos{" +
++            "x=" + x +
++            ", z=" + z +
++            '}';
++    }
++
++    @Override
++    public boolean equals(Object object) {
++        if (this == object) return true;
++        if (object == null || getClass() != object.getClass()) return false;
++
++        RegionPos regionPos = (RegionPos) object;
++
++        if (x != regionPos.x) return false;
++        return z == regionPos.z;
++    }
++
++    @Override
++    public int hashCode() {
++        int result = x;
++        result = 31 * result + z;
++        return result;
++    }
++}
