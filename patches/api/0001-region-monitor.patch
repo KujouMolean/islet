@@ -6,7 +6,7 @@ Subject: [PATCH] region monitor
 
 diff --git a/src/main/java/com/molean/regionmonitor/RegionMonitor.java b/src/main/java/com/molean/regionmonitor/RegionMonitor.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..f1be9fc887647d020a8e21a07205546226bc4f6e
+index 0000000000000000000000000000000000000000..c19f9e75b6473c281e5a39629327b848f3ff365f
 --- /dev/null
 +++ b/src/main/java/com/molean/regionmonitor/RegionMonitor.java
 @@ -0,0 +1,63 @@
@@ -49,7 +49,7 @@ index 0000000000000000000000000000000000000000..f1be9fc887647d020a8e21a072055462
 +            regionTickData = new RegionTickData();
 +            regionTickData.tick = currentTick;
 +            queue.addLast(regionTickData);
-+            while (!queue.isEmpty() && currentTick - queue.getFirst().tick < 1200) {
++            while (!queue.isEmpty() && currentTick - queue.getFirst().tick > 1200) {
 +                queue.removeFirst();
 +            }
 +        }
