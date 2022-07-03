@@ -4,8 +4,62 @@ Date: Sun, 3 Jul 2022 01:08:56 +0800
 Subject: [PATCH] region monitor
 
 
+diff --git a/src/main/java/net/minecraft/server/level/ChunkMap.java b/src/main/java/net/minecraft/server/level/ChunkMap.java
+index d98c489a58c8c2e657a8879b991aa57ef78f5015..4cc281f2704f47d763dff2653f30a362010145fa 100644
+--- a/src/main/java/net/minecraft/server/level/ChunkMap.java
++++ b/src/main/java/net/minecraft/server/level/ChunkMap.java
+@@ -14,6 +14,8 @@ import com.mojang.datafixers.util.Either;
+ import com.mojang.logging.LogUtils;
+ import com.mojang.serialization.DataResult;
+ import com.mojang.serialization.JsonOps;
++import com.molean.regionmonitor.RegionMonitor;
++import com.molean.regionmonitor.RegionMonitorManager;
+ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+ import it.unimi.dsi.fastutil.longs.Long2ByteMap;
+@@ -2098,7 +2100,10 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
+         this.level.timings.tracker2.startTiming();
+         try {
+             for (TrackedEntity tracker : this.entityMap.values()) {
++                RegionMonitor regionMonitor = RegionMonitorManager.INSTANCE.get(tracker.entity.chunkPosition().getRegionX(), tracker.entity.chunkPosition().getRegionZ()); // Islet
++                regionMonitor.startTick(tracker.entity.getLevel().getCraftServer().getCurrentTick()); // Islet
+                 tracker.serverEntity.sendChanges();
++                regionMonitor.stopTick(); // Islet
+             }
+         } finally {
+             this.level.timings.tracker2.stopTiming();
+diff --git a/src/main/java/net/minecraft/server/level/ServerChunkCache.java b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
+index 59acbf6249f8f5285504c0ddea448a3433d1d68d..f070519b31a3d721a2436b936ab129fd72ba214d 100644
+--- a/src/main/java/net/minecraft/server/level/ServerChunkCache.java
++++ b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
+@@ -18,6 +18,8 @@ import java.util.function.BooleanSupplier;
+ import java.util.function.Consumer;
+ import java.util.function.Supplier;
+ import javax.annotation.Nullable;
++import com.molean.regionmonitor.RegionMonitor;
++import com.molean.regionmonitor.RegionMonitorManager;
+ import net.minecraft.Util;
+ import net.minecraft.core.BlockPos;
+ import net.minecraft.core.SectionPos;
+@@ -1017,6 +1019,8 @@ public class ServerChunkCache extends ChunkSource {
+                     // Paper - move down
+                 // Paper end - optimise chunk tick iteration
+                 ChunkPos chunkcoordintpair = chunk1.getPos();
++                RegionMonitor regionMonitor = RegionMonitorManager.INSTANCE.get(chunkcoordintpair.getRegionX(), chunkcoordintpair.getRegionZ());
++                regionMonitor.startTick(chunk1.level.getCraftServer().getCurrentTick());
+ 
+                 if ((true || this.level.isNaturalSpawningAllowed(chunkcoordintpair)) && this.chunkMap.anyPlayerCloseEnoughForSpawning(holder, chunkcoordintpair, false)) { // Paper - optimise anyPlayerCloseEnoughForSpawning // Paper - replace player chunk loader system
+                     chunk1.incrementInhabitedTime(j);
+@@ -1029,6 +1033,7 @@ public class ServerChunkCache extends ChunkSource {
+                         if ((chunksTicked++ & 1) == 0) net.minecraft.server.MinecraftServer.getServer().executeMidTickTasks(); // Paper
+                     }
+                 }
++                regionMonitor.stopTick();
+                 // Paper start - optimise chunk tick iteration
+                 }
+             }
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index e13fcd15ab00ab4aee7fb3774db6984743680259..95a32fb30987cfb7b56a7eb254cf62ecfb0476cb 100644
+index e13fcd15ab00ab4aee7fb3774db6984743680259..c66f01d3289c288615272b2c1ae5c23de9906c59 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -6,6 +6,8 @@ import com.google.common.collect.Lists;
@@ -34,6 +88,36 @@ index e13fcd15ab00ab4aee7fb3774db6984743680259..95a32fb30987cfb7b56a7eb254cf62ec
              });
              timings.entityTick.stopTiming(); // Spigot
              timings.tickEntities.stopTiming(); // Spigot
+@@ -1086,23 +1091,27 @@ public class ServerLevel extends Level implements WorldGenLevel {
+     }
+ 
+     private void tickFluid(BlockPos pos, Fluid fluid) {
++        RegionMonitor regionMonitor = RegionMonitorManager.INSTANCE.get(pos.getX() >> 9, pos.getZ() >> 9);
++        regionMonitor.startTick(getCraftServer().getCurrentTick());
+         FluidState fluid1 = this.getFluidState(pos);
+ 
+         if (fluid1.is(fluid)) {
+             fluid1.tick(this, pos);
+         }
+         MinecraftServer.getServer().executeMidTickTasks(); // Paper - exec chunk tasks during world tick
+-
++        regionMonitor.stopTick();
+     }
+ 
+     private void tickBlock(BlockPos pos, Block block) {
++        RegionMonitor regionMonitor = RegionMonitorManager.INSTANCE.get(pos.getX() >> 9, pos.getZ() >> 9);
++        regionMonitor.startTick(getCraftServer().getCurrentTick());
+         BlockState iblockdata = this.getBlockState(pos);
+ 
+         if (iblockdata.is(block)) {
+             iblockdata.tick(this, pos, this.random);
+         }
+         MinecraftServer.getServer().executeMidTickTasks(); // Paper - exec chunk tasks during world tick
+-
++        regionMonitor.stopTick();
+     }
+ 
+     // Paper start - log detailed entity tick information
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
 index d59dea221ba0f1b9c14f403d3c6ea61b2c454316..31816771834345761630c5028cf0bbf7cd74fec8 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
@@ -65,7 +149,7 @@ index d59dea221ba0f1b9c14f403d3c6ea61b2c454316..31816771834345761630c5028cf0bbf7
          this.blockEntityTickers.removeAll(toRemove);
  
 diff --git a/src/main/java/net/minecraft/world/level/NaturalSpawner.java b/src/main/java/net/minecraft/world/level/NaturalSpawner.java
-index e31a2eea9a62ab2c0bed1a97dab6bae231b8cd8b..6d637db2d595593fb60b2c36ff737019a25e05d6 100644
+index e31a2eea9a62ab2c0bed1a97dab6bae231b8cd8b..2788fecb6640991d6ca671f2eff727a4263c02e5 100644
 --- a/src/main/java/net/minecraft/world/level/NaturalSpawner.java
 +++ b/src/main/java/net/minecraft/world/level/NaturalSpawner.java
 @@ -1,6 +1,9 @@
@@ -78,20 +162,3 @@ index e31a2eea9a62ab2c0bed1a97dab6bae231b8cd8b..6d637db2d595593fb60b2c36ff737019
  import it.unimi.dsi.fastutil.objects.Object2IntMap;
  import it.unimi.dsi.fastutil.objects.Object2IntMaps;
  import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-@@ -133,6 +136,8 @@ public final class NaturalSpawner {
-     public static void spawnForChunk(ServerLevel world, LevelChunk chunk, NaturalSpawner.SpawnState info, boolean spawnAnimals, boolean spawnMonsters, boolean rareSpawn) {
-         world.getProfiler().push("spawner");
-         world.timings.mobSpawn.startTiming(); // Spigot
-+        RegionMonitor regionMonitor = RegionMonitorManager.INSTANCE.get(chunk.getPos().x >> 5, chunk.getPos().x >> 5); // Islet
-+        regionMonitor.startTick(world.getCraftServer().getCurrentTick()); // Islet
-         MobCategory[] aenumcreaturetype = NaturalSpawner.SPAWNING_CATEGORIES;
-         int i = aenumcreaturetype.length;
- 
-@@ -187,6 +192,7 @@ public final class NaturalSpawner {
-             }
-         }
- 
-+        regionMonitor.stopTick(); //Islet
-         world.timings.mobSpawn.stopTiming(); // Spigot
-         world.getProfiler().pop();
-     }
