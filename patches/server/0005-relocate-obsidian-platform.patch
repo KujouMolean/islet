@@ -1,0 +1,41 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Molean <cnmolean@gmail.com>
+Date: Sun, 10 Jul 2022 23:03:17 +0800
+Subject: [PATCH] relocate obsidian platform
+
+
+diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
+index c66f01d3289c288615272b2c1ae5c23de9906c59..b3b698cbed79486320ce315484095b185429cede 100644
+--- a/src/main/java/net/minecraft/server/level/ServerLevel.java
++++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
+@@ -2415,10 +2415,14 @@ public class ServerLevel extends Level implements WorldGenLevel {
+ 
+     public static void makeObsidianPlatform(ServerLevel worldserver, Entity entity) {
+         // CraftBukkit end
+-        BlockPos blockposition = ServerLevel.END_SPAWN_POINT;
+-        int i = blockposition.getX();
+-        int j = blockposition.getY() - 2;
+-        int k = blockposition.getZ();
++//        BlockPos blockposition = ServerLevel.END_SPAWN_POINT;
++//        int i = blockposition.getX();
++//        int j = blockposition.getY() - 2;
++//        int k = blockposition.getZ();
++        int i = entity.getBlockX();
++        int j = entity.getBlockY();
++        int k = entity.getBlockZ();
++        BlockPos blockposition = new BlockPos(i, j + 2, k);
+ 
+         // CraftBukkit start
+         org.bukkit.craftbukkit.util.BlockStateListPopulator blockList = new org.bukkit.craftbukkit.util.BlockStateListPopulator(worldserver);
+diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+index 353463084d90eb684717e65c56da52cd25a1e375..a4f6c17f73e5b359f7dae2792f8873703c92f10d 100644
+--- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
++++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+@@ -1209,6 +1209,7 @@ public class ServerPlayer extends Player {
+ 
+     private void createEndPlatform(ServerLevel world, BlockPos centerPos) {
+         BlockPos.MutableBlockPos blockposition_mutableblockposition = centerPos.mutable();
++        centerPos = new BlockPos(this.getBlockX(), this.getBlockY(), this.getBlockZ());
+ 
+         org.bukkit.craftbukkit.util.BlockStateListPopulator blockList = new org.bukkit.craftbukkit.util.BlockStateListPopulator(world); // Paper
+         for (int i = -2; i <= 2; ++i) {

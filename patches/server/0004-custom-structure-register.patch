@@ -1,0 +1,67 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Molean <cnmolean@gmail.com>
+Date: Sun, 10 Jul 2022 20:19:50 +0800
+Subject: [PATCH] custom structure register
+
+
+diff --git a/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java b/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
+index 264ca51c2f2a5ff69688372b71ad7355366bac1a..0202112ff3ab57443467dd78449fec29f90550b3 100644
+--- a/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
++++ b/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
+@@ -8,6 +8,7 @@ import com.mojang.logging.LogUtils;
+ import com.mojang.serialization.Codec;
+ import com.mojang.serialization.codecs.RecordCodecBuilder.Instance;
+ import com.mojang.serialization.codecs.RecordCodecBuilder.Mu;
++import com.molean.structures.CustomStructureRegister;
+ import it.unimi.dsi.fastutil.ints.IntArraySet;
+ import it.unimi.dsi.fastutil.longs.LongSet;
+ import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
+@@ -44,6 +45,7 @@ import net.minecraft.core.Registry;
+ import net.minecraft.core.RegistryAccess;
+ import net.minecraft.core.SectionPos;
+ import net.minecraft.core.Vec3i;
++import net.minecraft.data.worldgen.Structures;
+ import net.minecraft.network.protocol.game.DebugPackets;
+ import net.minecraft.resources.RegistryOps;
+ import net.minecraft.resources.ResourceKey;
+@@ -82,6 +84,7 @@ import net.minecraft.world.level.levelgen.structure.StructureStart;
+ import net.minecraft.world.level.levelgen.structure.placement.ConcentricRingsStructurePlacement;
+ import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement;
+ import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement;
++import net.minecraft.world.level.levelgen.structure.structures.NetherFortressStructure;
+ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
+ import org.apache.commons.lang3.mutable.MutableBoolean;
+ import org.slf4j.Logger;
+@@ -719,7 +722,31 @@ public abstract class ChunkGenerator {
+     public WeightedRandomList<MobSpawnSettings.SpawnerData> getMobsAt(Holder<Biome> biome, StructureManager accessor, MobCategory group, BlockPos pos) {
+         Map<Structure, LongSet> map = accessor.getAllStructuresAt(pos);
+         Iterator iterator = map.entrySet().iterator();
+-
++        int regionX = pos.getX() >> 9;
++        int regionZ = pos.getZ() >> 9;
++        String structureType = CustomStructureRegister.INSTANCE.getStructure(regionX, regionZ);
++        if (structureType != null) {
++            Structure structure = null;
++            if ("PILLAGER_OUTPOST".equals(structureType)) {
++                structure = (Structure) ((Holder.Reference) Structures.PILLAGER_OUTPOST).value();
++            }
++            if ("OCEAN_MONUMENT".equals(structureType)) {
++                structure = (Structure) ((Holder.Reference) Structures.OCEAN_MONUMENT).value();
++            }
++            if ("SWAMP_HUT".equals(structureType)) {
++                structure = (Structure) ((Holder.Reference) Structures.SWAMP_HUT).value();
++            }
++            if ("FORTRESS".equals(structureType)) {
++                return NetherFortressStructure.FORTRESS_ENEMIES;
++            }
++            if (structure != null) {
++                Map<MobCategory, StructureSpawnOverride> spawnOverrides = structure.spawnOverrides();
++                StructureSpawnOverride structureSpawnOverride = spawnOverrides.get(group);
++                if (structureSpawnOverride != null) {
++                    return structureSpawnOverride.spawns();
++                }
++            }
++        }
+         while (iterator.hasNext()) {
+             Entry<Structure, LongSet> entry = (Entry) iterator.next();
+             Structure structure = (Structure) entry.getKey();

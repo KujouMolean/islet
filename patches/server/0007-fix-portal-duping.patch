@@ -1,0 +1,87 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Molean <cnmolean@gmail.com>
+Date: Tue, 12 Jul 2022 00:23:08 +0800
+Subject: [PATCH] fix portal duping
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index b0728b66c54dc22a5a98f150910d07f4b38ebd7e..bbf4421fa72f45390ed4bf63cf6397bb1b608cc4 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -2870,7 +2870,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+             }
+ 
+             this.processPortalCooldown();
+-            this.tickEndPortal(); // Paper - make end portalling safe
++//            this.tickEndPortal(); // Paper - make end portalling safe // Islet
+         }
+     }
+ 
+diff --git a/src/main/java/net/minecraft/world/entity/item/FallingBlockEntity.java b/src/main/java/net/minecraft/world/entity/item/FallingBlockEntity.java
+index ef07967b64180c54338b8fb2ba1780adec87f333..e179aefe3854ece3e3d0b0fef5fa0b849abc5cae 100644
+--- a/src/main/java/net/minecraft/world/entity/item/FallingBlockEntity.java
++++ b/src/main/java/net/minecraft/world/entity/item/FallingBlockEntity.java
+@@ -127,11 +127,13 @@ public class FallingBlockEntity extends Entity {
+ 
+     @Override
+     public void tick() {
++        // Islet start - revoke sand duping
+         // Paper start - fix sand duping
+-        if (this.isRemoved()) {
+-            return;
+-        }
++//        if (this.isRemoved()) {
++//            return;
++//        }
+         // Paper end - fix sand duping
++        // Islet end - revoke sand duping
+         if (this.blockState.isAir()) {
+             this.discard();
+         } else {
+@@ -144,11 +146,13 @@ public class FallingBlockEntity extends Entity {
+ 
+             this.move(MoverType.SELF, this.getDeltaMovement());
+ 
++            // Islet start - revoke sand duping
+             // Paper start - fix sand duping
+-            if (this.isRemoved()) {
+-                return;
+-            }
++            // if (this.isRemoved()) {
++            //     return;
++            // }
+             // Paper end - fix sand duping
++            // Islet end - revoke sand duping
+ 
+             // Paper start - Configurable EntityFallingBlock height nerf
+             if (this.level.paperConfig().fixes.fallingBlockHeightNerf != 0 && this.getY() > this.level.paperConfig().fixes.fallingBlockHeightNerf) {
+diff --git a/src/main/java/net/minecraft/world/level/block/EndPortalBlock.java b/src/main/java/net/minecraft/world/level/block/EndPortalBlock.java
+index 15c5cccfe02c924c02f605eb47dd0b420b189891..cb8067e9bec9fe70f527bcacebd03ec9db14e96a 100644
+--- a/src/main/java/net/minecraft/world/level/block/EndPortalBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/EndPortalBlock.java
+@@ -52,11 +52,23 @@ public class EndPortalBlock extends BaseEntityBlock {
+             if (worldserver == null) {
+                 // return; // CraftBukkit - always fire event in case plugins wish to change it
+             }
++            // Islet start
++            // CraftBukkit start - Entity in portal
++            EntityPortalEnterEvent event = new EntityPortalEnterEvent(entity.getBukkitEntity(), new org.bukkit.Location(world.getWorld(), pos.getX(), pos.getY(), pos.getZ()));
++            world.getCraftServer().getPluginManager().callEvent(event);
++
++            if (entity instanceof ServerPlayer) {
++                ((ServerPlayer) entity).changeDimension(worldserver, PlayerTeleportEvent.TeleportCause.END_PORTAL);
++                return;
++            }
++            // CraftBukkit end
++            entity.changeDimension(worldserver);
+ 
+             // Paper start - move all of this logic into portal tick
+-            entity.portalWorld = ((ServerLevel)world);
+-            entity.portalBlock = pos.immutable();
++            // entity.portalWorld = ((ServerLevel)world);
++            // entity.portalBlock = pos.immutable();
+             // Paper end - move all of this logic into portal tick
++            // Islet end
+         }
+ 
+     }
