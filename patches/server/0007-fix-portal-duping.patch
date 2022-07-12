@@ -5,10 +5,10 @@ Subject: [PATCH] fix portal duping
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index b0728b66c54dc22a5a98f150910d07f4b38ebd7e..bbf4421fa72f45390ed4bf63cf6397bb1b608cc4 100644
+index 0ca0eb89c6b073925431693f6f0372395ec89a09..6353247376cd65e320d52dfef3f5ed576f641458 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -2870,7 +2870,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -2863,7 +2863,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
              }
  
              this.processPortalCooldown();
