@@ -16,7 +16,7 @@ index 2374cc9bab5039d0a0dc11d4b2ec573ab75778a7..21f02862e6f1f6d9a898cdb02acedd2a
 -    implementation(project(":paper-mojangapi"))
 +    // Islet start
 +    implementation(project(":islet-api"))
-+    implementation("io.papermc.paper:paper-mojangapi:1.19.1-R0.1-SNAPSHOT") {
++    implementation("io.papermc.paper:paper-mojangapi:1.19.2-R0.1-SNAPSHOT") {
 +        exclude("io.papermc.paper", "paper-api")
 +    }
 +    // Islet end
