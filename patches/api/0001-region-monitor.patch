@@ -4,13 +4,13 @@ Date: Sun, 3 Jul 2022 01:08:56 +0800
 Subject: [PATCH] region monitor
 
 
-diff --git a/src/main/java/com/molean/regionmonitor/RegionMonitor.java b/src/main/java/com/molean/regionmonitor/RegionMonitor.java
+diff --git a/src/main/java/com/molean/region/monitor/RegionMonitor.java b/src/main/java/com/molean/region/monitor/RegionMonitor.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..c19f9e75b6473c281e5a39629327b848f3ff365f
+index 0000000000000000000000000000000000000000..d44322189f5a62f10a4217c775d77e012753ef12
 --- /dev/null
-+++ b/src/main/java/com/molean/regionmonitor/RegionMonitor.java
++++ b/src/main/java/com/molean/region/monitor/RegionMonitor.java
 @@ -0,0 +1,63 @@
-+package com.molean.regionmonitor;
++package com.molean.region.monitor;
 +
 +import java.util.Deque;
 +import java.util.LinkedList;
@@ -73,13 +73,13 @@ index 0000000000000000000000000000000000000000..c19f9e75b6473c281e5a39629327b848
 +        return queue;
 +    }
 +}
-diff --git a/src/main/java/com/molean/regionmonitor/RegionMonitorManager.java b/src/main/java/com/molean/regionmonitor/RegionMonitorManager.java
+diff --git a/src/main/java/com/molean/region/monitor/RegionMonitorManager.java b/src/main/java/com/molean/region/monitor/RegionMonitorManager.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..94130a9ac06d4d65a7ed660f3ddb7c3b249184ad
+index 0000000000000000000000000000000000000000..40c755beb8ab9e7e0bd5f723623f364a1fd45f9e
 --- /dev/null
-+++ b/src/main/java/com/molean/regionmonitor/RegionMonitorManager.java
++++ b/src/main/java/com/molean/region/monitor/RegionMonitorManager.java
 @@ -0,0 +1,24 @@
-+package com.molean.regionmonitor;
++package com.molean.region.monitor;
 +
 +import java.util.HashMap;
 +import java.util.Map;
@@ -103,13 +103,13 @@ index 0000000000000000000000000000000000000000..94130a9ac06d4d65a7ed660f3ddb7c3b
 +        return regionMonitorMap.get(regionPos);
 +    }
 +}
-diff --git a/src/main/java/com/molean/regionmonitor/RegionPos.java b/src/main/java/com/molean/regionmonitor/RegionPos.java
+diff --git a/src/main/java/com/molean/region/monitor/RegionPos.java b/src/main/java/com/molean/region/monitor/RegionPos.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..8896325174dba7e22726fb74033e379b0dc3ad34
+index 0000000000000000000000000000000000000000..d78034ed57498df1ce161e50f2a7f8447d3cbf69
 --- /dev/null
-+++ b/src/main/java/com/molean/regionmonitor/RegionPos.java
++++ b/src/main/java/com/molean/region/monitor/RegionPos.java
 @@ -0,0 +1,37 @@
-+package com.molean.regionmonitor;
++package com.molean.region.monitor;
 +
 +public class RegionPos {
 +    private int x;

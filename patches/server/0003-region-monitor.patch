@@ -5,19 +5,19 @@ Subject: [PATCH] region monitor
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ChunkMap.java b/src/main/java/net/minecraft/server/level/ChunkMap.java
-index d98c489a58c8c2e657a8879b991aa57ef78f5015..4cc281f2704f47d763dff2653f30a362010145fa 100644
+index 77c89376495d90d0e7cbf6cd02c9a1c8d9a4340b..6b7e186aa8bec144d90a3fd25e58e153fd9e3581 100644
 --- a/src/main/java/net/minecraft/server/level/ChunkMap.java
 +++ b/src/main/java/net/minecraft/server/level/ChunkMap.java
 @@ -14,6 +14,8 @@ import com.mojang.datafixers.util.Either;
  import com.mojang.logging.LogUtils;
  import com.mojang.serialization.DataResult;
  import com.mojang.serialization.JsonOps;
-+import com.molean.regionmonitor.RegionMonitor;
-+import com.molean.regionmonitor.RegionMonitorManager;
++import com.molean.region.monitor.RegionMonitor;
++import com.molean.region.monitor.RegionMonitorManager;
  import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
  import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
  import it.unimi.dsi.fastutil.longs.Long2ByteMap;
-@@ -2098,7 +2100,10 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
+@@ -2095,7 +2097,10 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
          this.level.timings.tracker2.startTiming();
          try {
              for (TrackedEntity tracker : this.entityMap.values()) {
@@ -29,15 +29,15 @@ index d98c489a58c8c2e657a8879b991aa57ef78f5015..4cc281f2704f47d763dff2653f30a362
          } finally {
              this.level.timings.tracker2.stopTiming();
 diff --git a/src/main/java/net/minecraft/server/level/ServerChunkCache.java b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
-index 59acbf6249f8f5285504c0ddea448a3433d1d68d..f070519b31a3d721a2436b936ab129fd72ba214d 100644
+index 59acbf6249f8f5285504c0ddea448a3433d1d68d..9bd10a898376efba68ecfe82f44bde3777796b5c 100644
 --- a/src/main/java/net/minecraft/server/level/ServerChunkCache.java
 +++ b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
 @@ -18,6 +18,8 @@ import java.util.function.BooleanSupplier;
  import java.util.function.Consumer;
  import java.util.function.Supplier;
  import javax.annotation.Nullable;
-+import com.molean.regionmonitor.RegionMonitor;
-+import com.molean.regionmonitor.RegionMonitorManager;
++import com.molean.region.monitor.RegionMonitor;
++import com.molean.region.monitor.RegionMonitorManager;
  import net.minecraft.Util;
  import net.minecraft.core.BlockPos;
  import net.minecraft.core.SectionPos;
@@ -59,19 +59,19 @@ index 59acbf6249f8f5285504c0ddea448a3433d1d68d..f070519b31a3d721a2436b936ab129fd
                  }
              }
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index e13fcd15ab00ab4aee7fb3774db6984743680259..c66f01d3289c288615272b2c1ae5c23de9906c59 100644
+index 083349794d5ceb50322c5a645dd33fbfcc1c8155..ddc01e8a820de6087f2e00eaa2ff52a6f4ce10d9 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -6,6 +6,8 @@ import com.google.common.collect.Lists;
  import com.mojang.datafixers.DataFixer;
  import com.mojang.datafixers.util.Pair;
  import com.mojang.logging.LogUtils;
-+import com.molean.regionmonitor.RegionMonitor;
-+import com.molean.regionmonitor.RegionMonitorManager;
++import com.molean.region.monitor.RegionMonitor;
++import com.molean.region.monitor.RegionMonitorManager;
  import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
  import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
  import it.unimi.dsi.fastutil.longs.LongSet;
-@@ -670,6 +672,8 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -671,6 +673,8 @@ public class ServerLevel extends Level implements WorldGenLevel {
              org.spigotmc.ActivationRange.activateEntities(this); // Spigot
              timings.entityTick.startTiming(); // Spigot
              this.entityTickList.forEach((entity) -> {
@@ -80,7 +80,7 @@ index e13fcd15ab00ab4aee7fb3774db6984743680259..c66f01d3289c288615272b2c1ae5c23d
                  if (!entity.isRemoved()) {
                      if (false && this.shouldDiscardEntity(entity)) { // CraftBukkit - We prevent spawning in general, so this butchering is not needed
                          entity.discard();
-@@ -694,6 +698,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -695,6 +699,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
                          }
                      }
                  }
@@ -88,7 +88,7 @@ index e13fcd15ab00ab4aee7fb3774db6984743680259..c66f01d3289c288615272b2c1ae5c23d
              });
              timings.entityTick.stopTiming(); // Spigot
              timings.tickEntities.stopTiming(); // Spigot
-@@ -1086,23 +1091,27 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1087,23 +1092,27 @@ public class ServerLevel extends Level implements WorldGenLevel {
      }
  
      private void tickFluid(BlockPos pos, Fluid fluid) {
@@ -119,19 +119,19 @@ index e13fcd15ab00ab4aee7fb3774db6984743680259..c66f01d3289c288615272b2c1ae5c23d
  
      // Paper start - log detailed entity tick information
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index d59dea221ba0f1b9c14f403d3c6ea61b2c454316..31816771834345761630c5028cf0bbf7cd74fec8 100644
+index 5a2a1d394852d39ea576624586f7fa736dec807c..81d5b3e81d95e82ffef92b0017b8cb4917f8c242 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -15,6 +15,8 @@ import java.util.function.Consumer;
  import java.util.function.Predicate;
  import java.util.function.Supplier;
  import javax.annotation.Nullable;
-+import com.molean.regionmonitor.RegionMonitor;
-+import com.molean.regionmonitor.RegionMonitorManager;
++import com.molean.region.monitor.RegionMonitor;
++import com.molean.region.monitor.RegionMonitorManager;
  import net.minecraft.CrashReport;
  import net.minecraft.CrashReportCategory;
  import net.minecraft.ReportedException;
-@@ -870,6 +872,8 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -869,6 +871,8 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
              }
              // Spigot end
  
@@ -140,7 +140,7 @@ index d59dea221ba0f1b9c14f403d3c6ea61b2c454316..31816771834345761630c5028cf0bbf7
              if (tickingblockentity.isRemoved()) {
                  // Spigot start
                  tilesThisCycle--;
-@@ -883,6 +887,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -882,6 +886,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
                  }
                  // Paper end - execute chunk tasks during tick
              }
@@ -149,16 +149,16 @@ index d59dea221ba0f1b9c14f403d3c6ea61b2c454316..31816771834345761630c5028cf0bbf7
          this.blockEntityTickers.removeAll(toRemove);
  
 diff --git a/src/main/java/net/minecraft/world/level/NaturalSpawner.java b/src/main/java/net/minecraft/world/level/NaturalSpawner.java
-index e31a2eea9a62ab2c0bed1a97dab6bae231b8cd8b..2788fecb6640991d6ca671f2eff727a4263c02e5 100644
+index e31a2eea9a62ab2c0bed1a97dab6bae231b8cd8b..36e920818ab33e89e825aefdce7b6067ddc6755e 100644
 --- a/src/main/java/net/minecraft/world/level/NaturalSpawner.java
 +++ b/src/main/java/net/minecraft/world/level/NaturalSpawner.java
 @@ -1,6 +1,9 @@
  package net.minecraft.world.level;
  
  import com.mojang.logging.LogUtils;
-+import com.molean.regionmonitor.RegionMonitor;
-+import com.molean.regionmonitor.RegionMonitorManager;
-+import com.molean.regionmonitor.RegionPos;
++import com.molean.region.monitor.RegionMonitor;
++import com.molean.region.monitor.RegionMonitorManager;
++import com.molean.region.monitor.RegionPos;
  import it.unimi.dsi.fastutil.objects.Object2IntMap;
  import it.unimi.dsi.fastutil.objects.Object2IntMaps;
  import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;

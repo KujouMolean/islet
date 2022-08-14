@@ -6,13 +6,13 @@ Subject: [PATCH] custom structure register
 
 diff --git a/src/main/java/com/molean/structures/CustomStructureRegister.java b/src/main/java/com/molean/structures/CustomStructureRegister.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..bd0bda238a88a1c0c92f42536e0d907e10516330
+index 0000000000000000000000000000000000000000..cf9c045e8f2a1f25383c2234e44b2231d4915c6c
 --- /dev/null
 +++ b/src/main/java/com/molean/structures/CustomStructureRegister.java
 @@ -0,0 +1,29 @@
 +package com.molean.structures;
 +
-+import com.molean.regionmonitor.RegionPos;
++import com.molean.region.monitor.RegionPos;
 +
 +import java.util.HashMap;
 +import java.util.Map;

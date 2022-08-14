@@ -5,7 +5,7 @@ Subject: [PATCH] custom structure register
 
 
 diff --git a/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java b/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
-index 264ca51c2f2a5ff69688372b71ad7355366bac1a..0202112ff3ab57443467dd78449fec29f90550b3 100644
+index 19ffd93b7bc745d9a6822f1e5642d2f640f61df7..a564fdf29538bb765dc785ed7007b13ff6b2d90d 100644
 --- a/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
 +++ b/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
 @@ -8,6 +8,7 @@ import com.mojang.logging.LogUtils;
@@ -32,7 +32,7 @@ index 264ca51c2f2a5ff69688372b71ad7355366bac1a..0202112ff3ab57443467dd78449fec29
  import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
  import org.apache.commons.lang3.mutable.MutableBoolean;
  import org.slf4j.Logger;
-@@ -719,7 +722,31 @@ public abstract class ChunkGenerator {
+@@ -721,7 +724,31 @@ public abstract class ChunkGenerator {
      public WeightedRandomList<MobSpawnSettings.SpawnerData> getMobsAt(Holder<Biome> biome, StructureManager accessor, MobCategory group, BlockPos pos) {
          Map<Structure, LongSet> map = accessor.getAllStructuresAt(pos);
          Iterator iterator = map.entrySet().iterator();
