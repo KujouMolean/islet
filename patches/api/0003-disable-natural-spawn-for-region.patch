@@ -1,0 +1,35 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Molean <cnmolean@gmail.com>
+Date: Sun, 14 Aug 2022 18:18:51 +0800
+Subject: [PATCH] disable natural spawn for region
+
+
+diff --git a/src/main/java/com/molean/region/modifier/NaturalSpawningDisableManager.java b/src/main/java/com/molean/region/modifier/NaturalSpawningDisableManager.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..49cb31be44af4d6f4f54cd813cd300aeaf79eb9d
+--- /dev/null
++++ b/src/main/java/com/molean/region/modifier/NaturalSpawningDisableManager.java
+@@ -0,0 +1,23 @@
++package com.molean.region.modifier;
++
++import com.molean.region.monitor.RegionPos;
++
++import java.util.HashMap;
++import java.util.Map;
++
++public enum NaturalSpawningDisableManager {
++    INSTANCE;
++    private final Map<RegionPos, Boolean> naturalDisableMap = new HashMap<>();
++
++    public boolean isRegionNaturalSpawningDisabled(RegionPos regionPos) {
++        return naturalDisableMap.getOrDefault(regionPos, false);
++    }
++
++    public void setRegionNaturalSpawning(RegionPos regionPos, boolean isDisable) {
++        naturalDisableMap.put(regionPos, isDisable);
++    }
++
++    public Map<RegionPos, Boolean> getNaturalSpawningDisableMap() {
++        return naturalDisableMap;
++    }
++}

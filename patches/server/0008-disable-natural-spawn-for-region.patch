@@ -1,0 +1,35 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Molean <cnmolean@gmail.com>
+Date: Sun, 14 Aug 2022 18:18:51 +0800
+Subject: [PATCH] disable natural spawn for region
+
+
+diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
+index 46ed5013f860e4684e94579cc49dd4a1df213aba..9234a1701f65850d2ee865c8ba9e8df6682d0056 100644
+--- a/src/main/java/net/minecraft/server/level/ServerLevel.java
++++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
+@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
+ import com.mojang.datafixers.DataFixer;
+ import com.mojang.datafixers.util.Pair;
+ import com.mojang.logging.LogUtils;
++import com.molean.region.modifier.NaturalSpawningDisableManager;
+ import com.molean.region.monitor.RegionMonitor;
+ import com.molean.region.monitor.RegionMonitorManager;
+ import com.molean.region.monitor.RegionPos;
+@@ -2491,10 +2492,16 @@ public class ServerLevel extends Level implements WorldGenLevel {
+     }
+ 
+     public boolean isNaturalSpawningAllowed(BlockPos pos) {
++        if (NaturalSpawningDisableManager.INSTANCE.isRegionNaturalSpawningDisabled(RegionPos.fromBlock(pos.getX(), pos.getZ()))) {
++            return false;
++        }
+         return this.entityManager.canPositionTick(ChunkPos.asLong(pos)); // Paper
+     }
+ 
+     public boolean isNaturalSpawningAllowed(ChunkPos pos) {
++        if (NaturalSpawningDisableManager.INSTANCE.isRegionNaturalSpawningDisabled(new RegionPos(pos.getRegionX(), pos.getRegionZ()))) {
++            return false;
++        }
+         return this.entityManager.canPositionTick(pos.toLong()); // Paper
+     }
+ 

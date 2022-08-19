@@ -105,10 +105,10 @@ index 0000000000000000000000000000000000000000..40c755beb8ab9e7e0bd5f723623f364a
 +}
 diff --git a/src/main/java/com/molean/region/monitor/RegionPos.java b/src/main/java/com/molean/region/monitor/RegionPos.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..d78034ed57498df1ce161e50f2a7f8447d3cbf69
+index 0000000000000000000000000000000000000000..ea6787765506d79e098d94fd2dca2c1fe82d4f86
 --- /dev/null
 +++ b/src/main/java/com/molean/region/monitor/RegionPos.java
-@@ -0,0 +1,37 @@
+@@ -0,0 +1,45 @@
 +package com.molean.region.monitor;
 +
 +public class RegionPos {
@@ -118,6 +118,14 @@ index 0000000000000000000000000000000000000000..d78034ed57498df1ce161e50f2a7f844
 +    public RegionPos(int x, int z) {
 +        this.x = x;
 +        this.z = z;
++    }
++
++    public static RegionPos fromChunk(int x, int z) {
++        return new RegionPos(x >> 5, z >> 5);
++    }
++
++    public static RegionPos fromBlock(int x, int z) {
++        return new RegionPos(x >> 9, z >> 9);
 +    }
 +
 +    @Override
