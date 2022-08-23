@@ -4,4 +4,6 @@
 
 目前的修改内容如下：
 
-1. 下界的WorldScale从8修改为1
+<s>1. 下界的WorldScale从8修改为1</s>
+
+自己看server/patches/
