@@ -36,10 +36,11 @@ jobs:
                   git config --global user.name "Github Actions"
                   ./gradlew applyPatches --stacktrace
                   ./gradlew createReobfBundlerJar --stacktrace
+                  ./gradlew createMojmapBundlerJar --stacktrace
             - uses: actions/upload-artifact@v3
               with:
                 name: my-artifact
-                path: build/libs/islet-bundler-*-SNAPSHOT-reobf.jar
+                path: build/libs/*.jar
             - uses: "marvinpinto/action-automatic-releases@latest"
               with:
                 repo_token: "${{ secrets.GIT_RELEASE_TOKEN }}"
