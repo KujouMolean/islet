@@ -5,7 +5,7 @@ Subject: [PATCH] disable natural spawn for region
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 46ed5013f860e4684e94579cc49dd4a1df213aba..9234a1701f65850d2ee865c8ba9e8df6682d0056 100644
+index 46ed5013f860e4684e94579cc49dd4a1df213aba..970083277eb47881e3c345a49d5a9e14754056d4 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
@@ -16,20 +16,25 @@ index 46ed5013f860e4684e94579cc49dd4a1df213aba..9234a1701f65850d2ee865c8ba9e8df6
  import com.molean.region.monitor.RegionMonitor;
  import com.molean.region.monitor.RegionMonitorManager;
  import com.molean.region.monitor.RegionPos;
-@@ -2491,10 +2492,16 @@ public class ServerLevel extends Level implements WorldGenLevel {
+diff --git a/src/main/java/net/minecraft/world/level/NaturalSpawner.java b/src/main/java/net/minecraft/world/level/NaturalSpawner.java
+index 36e920818ab33e89e825aefdce7b6067ddc6755e..e6765ffcb72bbb8f68d835ffb91cf854979b24f2 100644
+--- a/src/main/java/net/minecraft/world/level/NaturalSpawner.java
++++ b/src/main/java/net/minecraft/world/level/NaturalSpawner.java
+@@ -1,6 +1,7 @@
+ package net.minecraft.world.level;
+ 
+ import com.mojang.logging.LogUtils;
++import com.molean.region.modifier.NaturalSpawningDisableManager;
+ import com.molean.region.monitor.RegionMonitor;
+ import com.molean.region.monitor.RegionMonitorManager;
+ import com.molean.region.monitor.RegionPos;
+@@ -134,6 +135,9 @@ public final class NaturalSpawner {
      }
  
-     public boolean isNaturalSpawningAllowed(BlockPos pos) {
-+        if (NaturalSpawningDisableManager.INSTANCE.isRegionNaturalSpawningDisabled(RegionPos.fromBlock(pos.getX(), pos.getZ()))) {
-+            return false;
+     public static void spawnForChunk(ServerLevel world, LevelChunk chunk, NaturalSpawner.SpawnState info, boolean spawnAnimals, boolean spawnMonsters, boolean rareSpawn) {
++        if (NaturalSpawningDisableManager.INSTANCE.isRegionNaturalSpawningDisabled(new RegionPos(chunk.getPos().getRegionX(), chunk.getPos().getRegionZ()))) {
++            return;
 +        }
-         return this.entityManager.canPositionTick(ChunkPos.asLong(pos)); // Paper
-     }
- 
-     public boolean isNaturalSpawningAllowed(ChunkPos pos) {
-+        if (NaturalSpawningDisableManager.INSTANCE.isRegionNaturalSpawningDisabled(new RegionPos(pos.getRegionX(), pos.getRegionZ()))) {
-+            return false;
-+        }
-         return this.entityManager.canPositionTick(pos.toLong()); // Paper
-     }
- 
+         world.getProfiler().push("spawner");
+         world.timings.mobSpawn.startTiming(); // Spigot
+         MobCategory[] aenumcreaturetype = NaturalSpawner.SPAWNING_CATEGORIES;
