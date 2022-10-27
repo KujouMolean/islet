@@ -5,10 +5,10 @@ Subject: [PATCH] remove dragon
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 9aac7a42cf2a541027dc355f2909892c149bd42b..5d577cc898849e8c9cc80a302d903737ad644490 100644
+index ee13c9f99ee4cefe0f923bef43ad11ceb20e4b73..e5e6a3e86cffd1f8d5ca13e66540ff41bb046926 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -567,7 +567,8 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -598,7 +598,8 @@ public class ServerLevel extends Level implements WorldGenLevel {
          this.structureCheck = new StructureCheck(this.chunkSource.chunkScanner(), this.registryAccess(), minecraftserver.getStructureManager(), this.getTypeKey(), chunkgenerator, this.chunkSource.randomState(), this, chunkgenerator.getBiomeSource(), l, datafixer); // Paper - Fix missing CB diff
          this.structureManager = new StructureManager(this, this.serverLevelData.worldGenSettings(), this.structureCheck); // CraftBukkit
          if ((this.dimension() == Level.END && this.dimensionTypeRegistration().is(BuiltinDimensionTypes.END)) || env == org.bukkit.World.Environment.THE_END) { // CraftBukkit - Allow to create EnderDragonBattle in default and custom END

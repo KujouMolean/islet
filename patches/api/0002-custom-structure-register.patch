@@ -3,15 +3,53 @@ From: Molean <cnmolean@gmail.com>
 Date: Sun, 10 Jul 2022 20:19:50 +0800
 Subject: [PATCH] custom structure register
 
+qwq
 
+diff --git a/src/main/java/com/molean/region/monitor/LevelRegionPos.java b/src/main/java/com/molean/region/monitor/LevelRegionPos.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..adced2d88a098f8a470970ed220a505874c409e9
+--- /dev/null
++++ b/src/main/java/com/molean/region/monitor/LevelRegionPos.java
+@@ -0,0 +1,30 @@
++package com.molean.region.monitor;
++
++public class LevelRegionPos extends RegionPos{
++    private final String level;
++
++    public String getLevel() {
++        return level;
++    }
++
++    public LevelRegionPos(String level, int x, int z) {
++        super(x, z);
++        this.level = level;
++    }
++
++    @Override
++    public boolean equals(Object o) {
++        if (this == o) return true;
++        if (!(o instanceof LevelRegionPos that)) return false;
++        if (!super.equals(o)) return false;
++
++        return level.equals(that.level);
++    }
++
++    @Override
++    public int hashCode() {
++        int result = super.hashCode();
++        result = 31 * result + level.hashCode();
++        return result;
++    }
++}
 diff --git a/src/main/java/com/molean/structures/CustomStructureRegister.java b/src/main/java/com/molean/structures/CustomStructureRegister.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..cf9c045e8f2a1f25383c2234e44b2231d4915c6c
+index 0000000000000000000000000000000000000000..fa5b3f7e359cdb27ad5ec2a286c07090d52b2c5b
 --- /dev/null
 +++ b/src/main/java/com/molean/structures/CustomStructureRegister.java
-@@ -0,0 +1,29 @@
+@@ -0,0 +1,41 @@
 +package com.molean.structures;
 +
++import com.molean.region.monitor.LevelRegionPos;
 +import com.molean.region.monitor.RegionPos;
 +
 +import java.util.HashMap;
@@ -24,18 +62,29 @@ index 0000000000000000000000000000000000000000..cf9c045e8f2a1f25383c2234e44b2231
 +    CustomStructureRegister() {
 +    }
 +
-+    Map<RegionPos, String> structureMap = new HashMap<>();
++    private final Map<RegionPos, String> structureMap = new HashMap<>();
++
++    private final Map<LevelRegionPos, String> levelStructureMap = new HashMap<>();
 +
 +
 +    public void register(int regionX, int reginZ, String structureType) {
 +        structureMap.put(new RegionPos(regionX, reginZ), structureType);
 +    }
 +
++    public void register(String level, int regionX, int reginZ, String structureType) {
++        levelStructureMap.put(new LevelRegionPos(level, regionX, reginZ), structureType);
++    }
++
 +    public String getStructure(int x, int z) {
 +        return structureMap.get(new RegionPos(x, z));
++    }
++
++    public String getStructure(String level,int x, int z) {
++        return levelStructureMap.get(new LevelRegionPos(level, x, z));
 +    }
 +
 +    public Map<RegionPos, String> getStructureMap() {
 +        return structureMap;
 +    }
++
 +}

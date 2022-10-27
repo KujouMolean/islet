@@ -5,7 +5,7 @@ Subject: [PATCH] custom structure register
 
 
 diff --git a/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java b/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
-index 19ffd93b7bc745d9a6822f1e5642d2f640f61df7..a564fdf29538bb765dc785ed7007b13ff6b2d90d 100644
+index 9579889e4c7dedefc4f901ccac6157c425740481..ae6af89c0958843c6e725f1f82a7faa98ece644e 100644
 --- a/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
 +++ b/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
 @@ -8,6 +8,7 @@ import com.mojang.logging.LogUtils;
@@ -24,7 +24,15 @@ index 19ffd93b7bc745d9a6822f1e5642d2f640f61df7..a564fdf29538bb765dc785ed7007b13f
  import net.minecraft.network.protocol.game.DebugPackets;
  import net.minecraft.resources.RegistryOps;
  import net.minecraft.resources.ResourceKey;
-@@ -82,6 +84,7 @@ import net.minecraft.world.level.levelgen.structure.StructureStart;
+@@ -57,6 +59,7 @@ import net.minecraft.world.level.LevelHeightAccessor;
+ import net.minecraft.world.level.LevelReader;
+ import net.minecraft.world.level.StructureManager;
+ import net.minecraft.world.level.WorldGenLevel;
++import net.minecraft.world.level.LevelAccessor;
+ import net.minecraft.world.level.biome.Biome;
+ import net.minecraft.world.level.biome.BiomeGenerationSettings;
+ import net.minecraft.world.level.biome.BiomeManager;
+@@ -82,6 +85,7 @@ import net.minecraft.world.level.levelgen.structure.StructureStart;
  import net.minecraft.world.level.levelgen.structure.placement.ConcentricRingsStructurePlacement;
  import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement;
  import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement;
@@ -32,7 +40,7 @@ index 19ffd93b7bc745d9a6822f1e5642d2f640f61df7..a564fdf29538bb765dc785ed7007b13f
  import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
  import org.apache.commons.lang3.mutable.MutableBoolean;
  import org.slf4j.Logger;
-@@ -721,7 +724,31 @@ public abstract class ChunkGenerator {
+@@ -726,7 +730,37 @@ public abstract class ChunkGenerator {
      public WeightedRandomList<MobSpawnSettings.SpawnerData> getMobsAt(Holder<Biome> biome, StructureManager accessor, MobCategory group, BlockPos pos) {
          Map<Structure, LongSet> map = accessor.getAllStructuresAt(pos);
          Iterator iterator = map.entrySet().iterator();
@@ -40,6 +48,12 @@ index 19ffd93b7bc745d9a6822f1e5642d2f640f61df7..a564fdf29538bb765dc785ed7007b13f
 +        int regionX = pos.getX() >> 9;
 +        int regionZ = pos.getZ() >> 9;
 +        String structureType = CustomStructureRegister.INSTANCE.getStructure(regionX, regionZ);
++        if (structureType == null) {
++            LevelAccessor level = accessor.level;
++            if (level instanceof ServerLevel serverLevel) {
++                structureType = CustomStructureRegister.INSTANCE.getStructure(serverLevel.dimension().toString(), regionX, regionZ);
++            }
++        }
 +        if (structureType != null) {
 +            Structure structure = null;
 +            if ("PILLAGER_OUTPOST".equals(structureType)) {

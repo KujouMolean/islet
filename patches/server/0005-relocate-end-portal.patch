@@ -5,7 +5,7 @@ Subject: [PATCH] relocate end portal
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index fe18a6a41d28e3639144a75a99cd61802b779d1b..9aac7a42cf2a541027dc355f2909892c149bd42b 100644
+index 1260e059d514f049804a382a248bafad3a4e7dc7..ee13c9f99ee4cefe0f923bef43ad11ceb20e4b73 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -8,6 +8,7 @@ import com.mojang.datafixers.util.Pair;
@@ -24,7 +24,7 @@ index fe18a6a41d28e3639144a75a99cd61802b779d1b..9aac7a42cf2a541027dc355f2909892c
  import java.util.concurrent.Executor;
  import java.util.function.BooleanSupplier;
  import java.util.function.Function;
-@@ -2412,7 +2414,12 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -2423,7 +2425,12 @@ public class ServerLevel extends Level implements WorldGenLevel {
  
      public static void makeObsidianPlatform(ServerLevel worldserver, Entity entity) {
          // CraftBukkit end
@@ -39,7 +39,7 @@ index fe18a6a41d28e3639144a75a99cd61802b779d1b..9aac7a42cf2a541027dc355f2909892c
          int j = blockposition.getY() - 2;
          int k = blockposition.getZ();
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 0b3765ff8a25215bc42298b591eeffe022107079..0c02782212adcd5dafb602fcc9b8a2be82f18010 100644
+index f2908cf61ff28bef44fcf46b15cf585e942fd7ce..285f7c773af4dca07f25b460f518d651c6418409 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -7,6 +7,7 @@ import com.google.common.collect.Lists;

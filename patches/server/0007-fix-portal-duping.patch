@@ -5,7 +5,7 @@ Subject: [PATCH] fix portal duping
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 0c02782212adcd5dafb602fcc9b8a2be82f18010..4b45e6e56dbc94138a4dbe033349a4fb7cbcbadb 100644
+index 285f7c773af4dca07f25b460f518d651c6418409..eeff58d2aeec08ec0d79116b31be57d25e8b431f 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -2900,7 +2900,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
@@ -18,7 +18,7 @@ index 0c02782212adcd5dafb602fcc9b8a2be82f18010..4b45e6e56dbc94138a4dbe033349a4fb
      }
  
 diff --git a/src/main/java/net/minecraft/world/entity/item/FallingBlockEntity.java b/src/main/java/net/minecraft/world/entity/item/FallingBlockEntity.java
-index ef07967b64180c54338b8fb2ba1780adec87f333..e179aefe3854ece3e3d0b0fef5fa0b849abc5cae 100644
+index b2d1a17867cdbaad0c6e5c2376c716f9461af124..ea19b5757807dc027c7f5fde8e245ea970fa8416 100644
 --- a/src/main/java/net/minecraft/world/entity/item/FallingBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/item/FallingBlockEntity.java
 @@ -127,11 +127,13 @@ public class FallingBlockEntity extends Entity {
@@ -54,7 +54,7 @@ index ef07967b64180c54338b8fb2ba1780adec87f333..e179aefe3854ece3e3d0b0fef5fa0b84
 +            // Islet end - revoke sand duping
  
              // Paper start - Configurable EntityFallingBlock height nerf
-             if (this.level.paperConfig().fixes.fallingBlockHeightNerf != 0 && this.getY() > this.level.paperConfig().fixes.fallingBlockHeightNerf) {
+             if (this.level.paperConfig().fixes.fallingBlockHeightNerf.test(v -> this.getY() > v)) {
 diff --git a/src/main/java/net/minecraft/world/level/block/EndPortalBlock.java b/src/main/java/net/minecraft/world/level/block/EndPortalBlock.java
 index 15c5cccfe02c924c02f605eb47dd0b420b189891..cb8067e9bec9fe70f527bcacebd03ec9db14e96a 100644
 --- a/src/main/java/net/minecraft/world/level/block/EndPortalBlock.java
