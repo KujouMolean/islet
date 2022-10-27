@@ -1,0 +1,32 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Molean <cnmolean@gmail.com>
+Date: Sat, 22 Oct 2022 21:01:20 +0800
+Subject: [PATCH] accessibility
+
+
+diff --git a/src/main/java/net/minecraft/stats/ServerStatsCounter.java b/src/main/java/net/minecraft/stats/ServerStatsCounter.java
+index c59f98ca3adfdd90cdc5999aeadbb0834efedc0f..3ddfbf317243bad4d0c0c8b2ee049807a9da6af3 100644
+--- a/src/main/java/net/minecraft/stats/ServerStatsCounter.java
++++ b/src/main/java/net/minecraft/stats/ServerStatsCounter.java
+@@ -201,7 +201,7 @@ public class ServerStatsCounter extends StatsCounter {
+         return nbttagcompound;
+     }
+ 
+-    protected String toJson() {
++    public String toJson() {
+         Map<StatType<?>, JsonObject> map = Maps.newHashMap();
+         ObjectIterator objectiterator = this.stats.object2IntEntrySet().iterator();
+ 
+diff --git a/src/main/java/org/bukkit/craftbukkit/map/CraftMapRenderer.java b/src/main/java/org/bukkit/craftbukkit/map/CraftMapRenderer.java
+index 9683d7d103af66fffd68c11abc38fb4fd2f99482..58a1ca8cad3115f05033604876c41c40b86c4a26 100644
+--- a/src/main/java/org/bukkit/craftbukkit/map/CraftMapRenderer.java
++++ b/src/main/java/org/bukkit/craftbukkit/map/CraftMapRenderer.java
+@@ -12,7 +12,7 @@ import org.bukkit.map.MapView;
+ 
+ public class CraftMapRenderer extends MapRenderer {
+ 
+-    private final MapItemSavedData worldMap;
++    public final MapItemSavedData worldMap;
+ 
+     public CraftMapRenderer(CraftMapView mapView, MapItemSavedData worldMap) {
+         super(false);

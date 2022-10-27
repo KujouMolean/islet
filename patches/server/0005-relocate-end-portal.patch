@@ -5,7 +5,7 @@ Subject: [PATCH] relocate end portal
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index ddc01e8a820de6087f2e00eaa2ff52a6f4ce10d9..9fcbf1649ac1958d7c4ba4fb6eb46ea1985ded0b 100644
+index fe18a6a41d28e3639144a75a99cd61802b779d1b..9aac7a42cf2a541027dc355f2909892c149bd42b 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -8,6 +8,7 @@ import com.mojang.datafixers.util.Pair;
@@ -24,7 +24,7 @@ index ddc01e8a820de6087f2e00eaa2ff52a6f4ce10d9..9fcbf1649ac1958d7c4ba4fb6eb46ea1
  import java.util.concurrent.Executor;
  import java.util.function.BooleanSupplier;
  import java.util.function.Function;
-@@ -2407,7 +2409,12 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -2412,7 +2414,12 @@ public class ServerLevel extends Level implements WorldGenLevel {
  
      public static void makeObsidianPlatform(ServerLevel worldserver, Entity entity) {
          // CraftBukkit end
@@ -39,7 +39,7 @@ index ddc01e8a820de6087f2e00eaa2ff52a6f4ce10d9..9fcbf1649ac1958d7c4ba4fb6eb46ea1
          int j = blockposition.getY() - 2;
          int k = blockposition.getZ();
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index f925a8d550ecbf2044a37bfe58b30d6578c5f6af..af1ba8b944b5c5f836ef724c5f729af4afde8410 100644
+index 0b3765ff8a25215bc42298b591eeffe022107079..0c02782212adcd5dafb602fcc9b8a2be82f18010 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -7,6 +7,7 @@ import com.google.common.collect.Lists;
@@ -58,7 +58,7 @@ index f925a8d550ecbf2044a37bfe58b30d6578c5f6af..af1ba8b944b5c5f836ef724c5f729af4
  import java.util.concurrent.atomic.AtomicInteger;
  import java.util.function.BiConsumer;
  import java.util.function.Predicate;
-@@ -3461,7 +3463,11 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -3475,7 +3477,11 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
              BlockPos blockposition1;
  
              if (flag1) {
