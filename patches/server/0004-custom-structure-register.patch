@@ -3,9 +3,10 @@ From: Molean <cnmolean@gmail.com>
 Date: Sun, 10 Jul 2022 20:19:50 +0800
 Subject: [PATCH] custom structure register
 
+structure
 
 diff --git a/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java b/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
-index 9579889e4c7dedefc4f901ccac6157c425740481..ae6af89c0958843c6e725f1f82a7faa98ece644e 100644
+index 9579889e4c7dedefc4f901ccac6157c425740481..e6c0e76c26ec84b519a4f11cc2e9764116076b52 100644
 --- a/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
 +++ b/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
 @@ -8,6 +8,7 @@ import com.mojang.logging.LogUtils;
@@ -40,20 +41,25 @@ index 9579889e4c7dedefc4f901ccac6157c425740481..ae6af89c0958843c6e725f1f82a7faa9
  import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
  import org.apache.commons.lang3.mutable.MutableBoolean;
  import org.slf4j.Logger;
-@@ -726,7 +730,37 @@ public abstract class ChunkGenerator {
+@@ -726,7 +730,43 @@ public abstract class ChunkGenerator {
      public WeightedRandomList<MobSpawnSettings.SpawnerData> getMobsAt(Holder<Biome> biome, StructureManager accessor, MobCategory group, BlockPos pos) {
          Map<Structure, LongSet> map = accessor.getAllStructuresAt(pos);
          Iterator iterator = map.entrySet().iterator();
--
 +        int regionX = pos.getX() >> 9;
 +        int regionZ = pos.getZ() >> 9;
++        int chunkX = pos.getX() >> 4;
++        int chunkZ = pos.getZ() >> 4;
 +        String structureType = CustomStructureRegister.INSTANCE.getStructure(regionX, regionZ);
 +        if (structureType == null) {
 +            LevelAccessor level = accessor.level;
 +            if (level instanceof ServerLevel serverLevel) {
 +                structureType = CustomStructureRegister.INSTANCE.getStructure(serverLevel.dimension().toString(), regionX, regionZ);
++                if (structureType == null) {
++                    structureType = CustomStructureRegister.INSTANCE.getChunkPredictor().apply(serverLevel.dimension().toString(), it.unimi.dsi.fastutil.Pair.of(chunkX, chunkZ));
++                }
 +            }
 +        }
+ 
 +        if (structureType != null) {
 +            Structure structure = null;
 +            if ("PILLAGER_OUTPOST".equals(structureType)) {

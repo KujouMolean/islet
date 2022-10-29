@@ -43,17 +43,19 @@ index 0000000000000000000000000000000000000000..adced2d88a098f8a470970ed220a5058
 +}
 diff --git a/src/main/java/com/molean/structures/CustomStructureRegister.java b/src/main/java/com/molean/structures/CustomStructureRegister.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..fa5b3f7e359cdb27ad5ec2a286c07090d52b2c5b
+index 0000000000000000000000000000000000000000..af851caaed1f719d4ecd14eec47e4c2e03832a4e
 --- /dev/null
 +++ b/src/main/java/com/molean/structures/CustomStructureRegister.java
-@@ -0,0 +1,41 @@
+@@ -0,0 +1,55 @@
 +package com.molean.structures;
 +
 +import com.molean.region.monitor.LevelRegionPos;
 +import com.molean.region.monitor.RegionPos;
++import it.unimi.dsi.fastutil.Pair;
 +
 +import java.util.HashMap;
 +import java.util.Map;
++import java.util.function.BiFunction;
 +
 +public enum CustomStructureRegister {
 +    INSTANCE,
@@ -66,6 +68,11 @@ index 0000000000000000000000000000000000000000..fa5b3f7e359cdb27ad5ec2a286c07090
 +
 +    private final Map<LevelRegionPos, String> levelStructureMap = new HashMap<>();
 +
++    private BiFunction<String, Pair<Integer, Integer>, String> predictor;
++
++    public void setPredictor(BiFunction<String, Pair<Integer, Integer>, String> predictor) {
++        this.predictor = predictor;
++    }
 +
 +    public void register(int regionX, int reginZ, String structureType) {
 +        structureMap.put(new RegionPos(regionX, reginZ), structureType);
@@ -79,7 +86,7 @@ index 0000000000000000000000000000000000000000..fa5b3f7e359cdb27ad5ec2a286c07090
 +        return structureMap.get(new RegionPos(x, z));
 +    }
 +
-+    public String getStructure(String level,int x, int z) {
++    public String getStructure(String level, int x, int z) {
 +        return levelStructureMap.get(new LevelRegionPos(level, x, z));
 +    }
 +
@@ -87,4 +94,11 @@ index 0000000000000000000000000000000000000000..fa5b3f7e359cdb27ad5ec2a286c07090
 +        return structureMap;
 +    }
 +
++    public Map<LevelRegionPos, String> getLevelStructureMap() {
++        return levelStructureMap;
++    }
++
++    public BiFunction<String, Pair<Integer, Integer>, String> getChunkPredictor() {
++        return predictor;
++    }
 +}
