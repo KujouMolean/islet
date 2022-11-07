@@ -5,15 +5,18 @@ Subject: [PATCH] disable border nature spawn
 
 
 diff --git a/src/main/java/net/minecraft/world/level/NaturalSpawner.java b/src/main/java/net/minecraft/world/level/NaturalSpawner.java
-index e6765ffcb72bbb8f68d835ffb91cf854979b24f2..714b639a39201dfee4990234db28bc8a90cc9eb1 100644
+index 8739a75e4fcddb535c61e15e863780eb29ec5d94..d48eb7265a20a61927d8a944e11f696fd137646e 100644
 --- a/src/main/java/net/minecraft/world/level/NaturalSpawner.java
 +++ b/src/main/java/net/minecraft/world/level/NaturalSpawner.java
-@@ -138,6 +138,9 @@ public final class NaturalSpawner {
+@@ -138,6 +138,12 @@ public final class NaturalSpawner {
          if (NaturalSpawningDisableManager.INSTANCE.isRegionNaturalSpawningDisabled(new RegionPos(chunk.getPos().getRegionX(), chunk.getPos().getRegionZ()))) {
              return;
          }
-+        if (chunk.getPos().x % 32 == 0 || chunk.getPos().x % 32 == 31 || chunk.getPos().z % 32 == 0 || chunk.getPos().z % 32 == 31) {
-+            return;
++        String property = System.getProperty("islet.DisableBorderNaturalSpawn", "true");
++        if (property.equals("true")) {
++            if (chunk.getPos().x % 32 == 0 || chunk.getPos().x % 32 == 31 || chunk.getPos().z % 32 == 0 || chunk.getPos().z % 32 == 31) {
++                return;
++            }
 +        }
          world.getProfiler().push("spawner");
          world.timings.mobSpawn.startTiming(); // Spigot
