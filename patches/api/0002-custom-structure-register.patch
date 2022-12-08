@@ -3,7 +3,6 @@ From: Molean <cnmolean@gmail.com>
 Date: Sun, 10 Jul 2022 20:19:50 +0800
 Subject: [PATCH] custom structure register
 
-qwq
 
 diff --git a/src/main/java/com/molean/region/monitor/LevelRegionPos.java b/src/main/java/com/molean/region/monitor/LevelRegionPos.java
 new file mode 100644
@@ -43,7 +42,7 @@ index 0000000000000000000000000000000000000000..adced2d88a098f8a470970ed220a5058
 +}
 diff --git a/src/main/java/com/molean/structures/CustomStructureRegister.java b/src/main/java/com/molean/structures/CustomStructureRegister.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..af851caaed1f719d4ecd14eec47e4c2e03832a4e
+index 0000000000000000000000000000000000000000..75018dfe58bd72038fcf3d9d5656eba2f0b78ac6
 --- /dev/null
 +++ b/src/main/java/com/molean/structures/CustomStructureRegister.java
 @@ -0,0 +1,55 @@
@@ -68,7 +67,7 @@ index 0000000000000000000000000000000000000000..af851caaed1f719d4ecd14eec47e4c2e
 +
 +    private final Map<LevelRegionPos, String> levelStructureMap = new HashMap<>();
 +
-+    private BiFunction<String, Pair<Integer, Integer>, String> predictor;
++    private BiFunction<String, Pair<Integer, Integer>, String> predictor = (s, integerIntegerPair) -> null;
 +
 +    public void setPredictor(BiFunction<String, Pair<Integer, Integer>, String> predictor) {
 +        this.predictor = predictor;

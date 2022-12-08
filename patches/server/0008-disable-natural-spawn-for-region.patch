@@ -5,7 +5,7 @@ Subject: [PATCH] disable natural spawn for region
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 46ed5013f860e4684e94579cc49dd4a1df213aba..970083277eb47881e3c345a49d5a9e14754056d4 100644
+index 58d7345c98dfe45fd23fcde8f6aab504120a3ae5..55acac9d4eec4957986b3c3b261c05785fd00865 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
@@ -17,7 +17,7 @@ index 46ed5013f860e4684e94579cc49dd4a1df213aba..970083277eb47881e3c345a49d5a9e14
  import com.molean.region.monitor.RegionMonitorManager;
  import com.molean.region.monitor.RegionPos;
 diff --git a/src/main/java/net/minecraft/world/level/NaturalSpawner.java b/src/main/java/net/minecraft/world/level/NaturalSpawner.java
-index 36e920818ab33e89e825aefdce7b6067ddc6755e..e6765ffcb72bbb8f68d835ffb91cf854979b24f2 100644
+index 55f86bc892b47764d6487f932c520cb849158940..29aca952dba5775f4b2a3f4220f2c7370866c8a7 100644
 --- a/src/main/java/net/minecraft/world/level/NaturalSpawner.java
 +++ b/src/main/java/net/minecraft/world/level/NaturalSpawner.java
 @@ -1,6 +1,7 @@
@@ -28,7 +28,7 @@ index 36e920818ab33e89e825aefdce7b6067ddc6755e..e6765ffcb72bbb8f68d835ffb91cf854
  import com.molean.region.monitor.RegionMonitor;
  import com.molean.region.monitor.RegionMonitorManager;
  import com.molean.region.monitor.RegionPos;
-@@ -134,6 +135,9 @@ public final class NaturalSpawner {
+@@ -135,6 +136,9 @@ public final class NaturalSpawner {
      }
  
      public static void spawnForChunk(ServerLevel world, LevelChunk chunk, NaturalSpawner.SpawnState info, boolean spawnAnimals, boolean spawnMonsters, boolean rareSpawn) {

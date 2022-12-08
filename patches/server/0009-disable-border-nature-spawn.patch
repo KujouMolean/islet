@@ -5,10 +5,10 @@ Subject: [PATCH] disable border nature spawn
 
 
 diff --git a/src/main/java/net/minecraft/world/level/NaturalSpawner.java b/src/main/java/net/minecraft/world/level/NaturalSpawner.java
-index 8739a75e4fcddb535c61e15e863780eb29ec5d94..d48eb7265a20a61927d8a944e11f696fd137646e 100644
+index 29aca952dba5775f4b2a3f4220f2c7370866c8a7..60b28a22d510fbd9c9595c99b8b6d5ad48af2d26 100644
 --- a/src/main/java/net/minecraft/world/level/NaturalSpawner.java
 +++ b/src/main/java/net/minecraft/world/level/NaturalSpawner.java
-@@ -138,6 +138,12 @@ public final class NaturalSpawner {
+@@ -139,6 +139,12 @@ public final class NaturalSpawner {
          if (NaturalSpawningDisableManager.INSTANCE.isRegionNaturalSpawningDisabled(new RegionPos(chunk.getPos().getRegionX(), chunk.getPos().getRegionZ()))) {
              return;
          }

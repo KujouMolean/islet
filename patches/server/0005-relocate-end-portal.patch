@@ -5,7 +5,7 @@ Subject: [PATCH] relocate end portal
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 1260e059d514f049804a382a248bafad3a4e7dc7..ee13c9f99ee4cefe0f923bef43ad11ceb20e4b73 100644
+index d5a226a8a58d10d5eada2020e5b111932ed3525c..4441735686c71e0bba6f188efce38b75f10b02a4 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -8,6 +8,7 @@ import com.mojang.datafixers.util.Pair;
@@ -16,7 +16,7 @@ index 1260e059d514f049804a382a248bafad3a4e7dc7..ee13c9f99ee4cefe0f923bef43ad11ce
  import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
  import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
  import it.unimi.dsi.fastutil.longs.LongSet;
-@@ -33,6 +34,7 @@ import java.util.Objects;
+@@ -32,6 +33,7 @@ import java.util.Objects;
  import java.util.Optional;
  import java.util.Set;
  import java.util.UUID;
@@ -24,7 +24,7 @@ index 1260e059d514f049804a382a248bafad3a4e7dc7..ee13c9f99ee4cefe0f923bef43ad11ce
  import java.util.concurrent.Executor;
  import java.util.function.BooleanSupplier;
  import java.util.function.Function;
-@@ -2423,7 +2425,12 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -2399,7 +2401,12 @@ public class ServerLevel extends Level implements WorldGenLevel {
  
      public static void makeObsidianPlatform(ServerLevel worldserver, Entity entity) {
          // CraftBukkit end
@@ -39,7 +39,7 @@ index 1260e059d514f049804a382a248bafad3a4e7dc7..ee13c9f99ee4cefe0f923bef43ad11ce
          int j = blockposition.getY() - 2;
          int k = blockposition.getZ();
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index f2908cf61ff28bef44fcf46b15cf585e942fd7ce..285f7c773af4dca07f25b460f518d651c6418409 100644
+index 7f94da8059147760cbdc2476d0e8beda4a105f40..f5b1ada04d3542f888c417120968588b1f870022 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -7,6 +7,7 @@ import com.google.common.collect.Lists;
@@ -58,7 +58,7 @@ index f2908cf61ff28bef44fcf46b15cf585e942fd7ce..285f7c773af4dca07f25b460f518d651
  import java.util.concurrent.atomic.AtomicInteger;
  import java.util.function.BiConsumer;
  import java.util.function.Predicate;
-@@ -3475,7 +3477,11 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -3505,7 +3507,11 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
              BlockPos blockposition1;
  
              if (flag1) {

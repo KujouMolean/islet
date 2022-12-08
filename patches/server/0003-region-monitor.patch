@@ -5,7 +5,7 @@ Subject: [PATCH] region monitor
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ChunkMap.java b/src/main/java/net/minecraft/server/level/ChunkMap.java
-index 9ad7c417616e68b1d14a702aca38b2582feb896c..f3c894db3fdf8c42c26064cb4851038f84edc3e7 100644
+index 7d98f9af7cc6c92ba0b503f919c29a361db65593..00629983131f388704a48fea1a86e20a2cc520f1 100644
 --- a/src/main/java/net/minecraft/server/level/ChunkMap.java
 +++ b/src/main/java/net/minecraft/server/level/ChunkMap.java
 @@ -14,6 +14,8 @@ import com.mojang.datafixers.util.Either;
@@ -17,7 +17,7 @@ index 9ad7c417616e68b1d14a702aca38b2582feb896c..f3c894db3fdf8c42c26064cb4851038f
  import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
  import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
  import it.unimi.dsi.fastutil.longs.Long2ByteMap;
-@@ -1252,7 +1254,10 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
+@@ -1264,7 +1266,10 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
          this.level.timings.tracker2.startTiming();
          try {
              for (TrackedEntity tracker : this.entityMap.values()) {
@@ -29,7 +29,7 @@ index 9ad7c417616e68b1d14a702aca38b2582feb896c..f3c894db3fdf8c42c26064cb4851038f
          } finally {
              this.level.timings.tracker2.stopTiming();
 diff --git a/src/main/java/net/minecraft/server/level/ServerChunkCache.java b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
-index be97d38f45046a7f6d2337d879651f04cf9ff825..df0aae9fefea14a37c4e10ccaa91d6404980a6ba 100644
+index ca84eddbdb1e198b899750e5f6b3eafd25ce970f..013d48b6c479358e7d40ead36d0cfffa36d9d674 100644
 --- a/src/main/java/net/minecraft/server/level/ServerChunkCache.java
 +++ b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
 @@ -18,6 +18,8 @@ import java.util.function.BooleanSupplier;
@@ -41,7 +41,7 @@ index be97d38f45046a7f6d2337d879651f04cf9ff825..df0aae9fefea14a37c4e10ccaa91d640
  import net.minecraft.Util;
  import net.minecraft.core.BlockPos;
  import net.minecraft.core.SectionPos;
-@@ -757,6 +759,8 @@ public class ServerChunkCache extends ChunkSource {
+@@ -758,6 +760,8 @@ public class ServerChunkCache extends ChunkSource {
                      // Paper - move down
                  // Paper end - optimise chunk tick iteration
                  ChunkPos chunkcoordintpair = chunk1.getPos();
@@ -50,7 +50,7 @@ index be97d38f45046a7f6d2337d879651f04cf9ff825..df0aae9fefea14a37c4e10ccaa91d640
  
                  if ((true || this.level.isNaturalSpawningAllowed(chunkcoordintpair)) && this.chunkMap.anyPlayerCloseEnoughForSpawning(holder, chunkcoordintpair, false)) { // Paper - optimise anyPlayerCloseEnoughForSpawning // Paper - the chunk is known ticking
                      chunk1.incrementInhabitedTime(j);
-@@ -769,6 +773,7 @@ public class ServerChunkCache extends ChunkSource {
+@@ -770,6 +774,7 @@ public class ServerChunkCache extends ChunkSource {
                          if ((chunksTicked++ & 1) == 0) net.minecraft.server.MinecraftServer.getServer().executeMidTickTasks(); // Paper
                      }
                  }
@@ -59,7 +59,7 @@ index be97d38f45046a7f6d2337d879651f04cf9ff825..df0aae9fefea14a37c4e10ccaa91d640
                  }
              }
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index 8b3e703ebb497b9166bd211b4247a78891b61aeb..1260e059d514f049804a382a248bafad3a4e7dc7 100644
+index f3a19d00f78e19aa98c57461efb90d79f656a992..d5a226a8a58d10d5eada2020e5b111932ed3525c 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -6,6 +6,8 @@ import com.google.common.collect.Lists;
@@ -71,7 +71,7 @@ index 8b3e703ebb497b9166bd211b4247a78891b61aeb..1260e059d514f049804a382a248bafad
  import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
  import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
  import it.unimi.dsi.fastutil.longs.LongSet;
-@@ -708,6 +710,8 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -711,6 +713,8 @@ public class ServerLevel extends Level implements WorldGenLevel {
              org.spigotmc.ActivationRange.activateEntities(this); // Spigot
              timings.entityTick.startTiming(); // Spigot
              this.entityTickList.forEach((entity) -> {
@@ -80,7 +80,7 @@ index 8b3e703ebb497b9166bd211b4247a78891b61aeb..1260e059d514f049804a382a248bafad
                  if (!entity.isRemoved()) {
                      if (false && this.shouldDiscardEntity(entity)) { // CraftBukkit - We prevent spawning in general, so this butchering is not needed
                          entity.discard();
-@@ -732,6 +736,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -735,6 +739,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
                          }
                      }
                  }
@@ -88,7 +88,7 @@ index 8b3e703ebb497b9166bd211b4247a78891b61aeb..1260e059d514f049804a382a248bafad
              });
              timings.entityTick.stopTiming(); // Spigot
              timings.tickEntities.stopTiming(); // Spigot
-@@ -1124,23 +1129,27 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -1145,23 +1150,27 @@ public class ServerLevel extends Level implements WorldGenLevel {
      }
  
      private void tickFluid(BlockPos pos, Fluid fluid) {
@@ -119,7 +119,7 @@ index 8b3e703ebb497b9166bd211b4247a78891b61aeb..1260e059d514f049804a382a248bafad
  
      // Paper start - log detailed entity tick information
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 596fb8ee21ba8450db13a11890d241ef3974d81d..05144c4084b9a76c1728a5fec59ccef3ef6c4d70 100644
+index 3cbf801b2e5420c0e870f73788deb550e49ad54d..2cf0f369c7baa942d31139c468da5b7699848d6b 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -15,6 +15,8 @@ import java.util.function.Consumer;
@@ -131,7 +131,7 @@ index 596fb8ee21ba8450db13a11890d241ef3974d81d..05144c4084b9a76c1728a5fec59ccef3
  import net.minecraft.CrashReport;
  import net.minecraft.CrashReportCategory;
  import net.minecraft.ReportedException;
-@@ -869,6 +871,8 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -890,6 +892,8 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
              }
              // Spigot end
  
@@ -140,7 +140,7 @@ index 596fb8ee21ba8450db13a11890d241ef3974d81d..05144c4084b9a76c1728a5fec59ccef3
              if (tickingblockentity.isRemoved()) {
                  // Spigot start
                  tilesThisCycle--;
-@@ -882,6 +886,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -903,6 +907,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
                  }
                  // Paper end - execute chunk tasks during tick
              }
@@ -149,7 +149,7 @@ index 596fb8ee21ba8450db13a11890d241ef3974d81d..05144c4084b9a76c1728a5fec59ccef3
          this.blockEntityTickers.removeAll(toRemove);
  
 diff --git a/src/main/java/net/minecraft/world/level/NaturalSpawner.java b/src/main/java/net/minecraft/world/level/NaturalSpawner.java
-index 272bdc088f440cf94850dff6e626331b4b5d6539..8f07c20247bf82b7de7ed4150a9323f1967e748c 100644
+index 01b21f520ef1c834b9bafc3de85c1fa4fcf539d6..55f86bc892b47764d6487f932c520cb849158940 100644
 --- a/src/main/java/net/minecraft/world/level/NaturalSpawner.java
 +++ b/src/main/java/net/minecraft/world/level/NaturalSpawner.java
 @@ -1,6 +1,9 @@

@@ -5,10 +5,10 @@ Subject: [PATCH] accessibility
 
 
 diff --git a/src/main/java/net/minecraft/stats/ServerStatsCounter.java b/src/main/java/net/minecraft/stats/ServerStatsCounter.java
-index c59f98ca3adfdd90cdc5999aeadbb0834efedc0f..3ddfbf317243bad4d0c0c8b2ee049807a9da6af3 100644
+index 72946e324c575ef39f3939225b96b68f724da460..c7c90f5c24787e6676d837be44e7cfa812a5ffd1 100644
 --- a/src/main/java/net/minecraft/stats/ServerStatsCounter.java
 +++ b/src/main/java/net/minecraft/stats/ServerStatsCounter.java
-@@ -201,7 +201,7 @@ public class ServerStatsCounter extends StatsCounter {
+@@ -202,7 +202,7 @@ public class ServerStatsCounter extends StatsCounter {
          return nbttagcompound;
      }
  
@@ -18,16 +18,16 @@ index c59f98ca3adfdd90cdc5999aeadbb0834efedc0f..3ddfbf317243bad4d0c0c8b2ee049807
          ObjectIterator objectiterator = this.stats.object2IntEntrySet().iterator();
  
 diff --git a/src/main/java/net/minecraft/world/level/StructureManager.java b/src/main/java/net/minecraft/world/level/StructureManager.java
-index 64ca546a905d69a795bbdafb4f9860b31cd863d1..5e7cef476d9671651e318cfcda958dbc90561321 100644
+index bad7031426ae6c750ae4376beb238186e7d65270..09c85ed428b8eaf51f8b3c6e45cce925f05ab354 100644
 --- a/src/main/java/net/minecraft/world/level/StructureManager.java
 +++ b/src/main/java/net/minecraft/world/level/StructureManager.java
-@@ -24,7 +24,7 @@ import net.minecraft.world.level.levelgen.structure.StructurePiece;
+@@ -25,7 +25,7 @@ import net.minecraft.world.level.levelgen.structure.StructurePiece;
  import net.minecraft.world.level.levelgen.structure.StructureStart;
  
  public class StructureManager {
 -    private final LevelAccessor level;
 +    public final LevelAccessor level;
-     private final WorldGenSettings worldGenSettings;
+     private final WorldOptions worldOptions;
      private final StructureCheck structureCheck;
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/map/CraftMapRenderer.java b/src/main/java/org/bukkit/craftbukkit/map/CraftMapRenderer.java

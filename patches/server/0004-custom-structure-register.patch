@@ -6,45 +6,46 @@ Subject: [PATCH] custom structure register
 structure
 
 diff --git a/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java b/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
-index 9579889e4c7dedefc4f901ccac6157c425740481..e6c0e76c26ec84b519a4f11cc2e9764116076b52 100644
+index 95dd058fca280a1e16f3d327be2aabeab91be534..242ca253bf917eb6aa2bb01f6a1e6014438a8485 100644
 --- a/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
 +++ b/src/main/java/net/minecraft/world/level/chunk/ChunkGenerator.java
-@@ -8,6 +8,7 @@ import com.mojang.logging.LogUtils;
+@@ -3,6 +3,7 @@ package net.minecraft.world.level.chunk;
+ import com.google.common.base.Suppliers;
+ import com.mojang.datafixers.util.Pair;
  import com.mojang.serialization.Codec;
- import com.mojang.serialization.codecs.RecordCodecBuilder.Instance;
- import com.mojang.serialization.codecs.RecordCodecBuilder.Mu;
 +import com.molean.structures.CustomStructureRegister;
  import it.unimi.dsi.fastutil.ints.IntArraySet;
  import it.unimi.dsi.fastutil.longs.LongSet;
  import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
-@@ -44,6 +45,7 @@ import net.minecraft.core.Registry;
- import net.minecraft.core.RegistryAccess;
- import net.minecraft.core.SectionPos;
- import net.minecraft.core.Vec3i;
-+import net.minecraft.data.worldgen.Structures;
- import net.minecraft.network.protocol.game.DebugPackets;
- import net.minecraft.resources.RegistryOps;
- import net.minecraft.resources.ResourceKey;
-@@ -57,6 +59,7 @@ import net.minecraft.world.level.LevelHeightAccessor;
- import net.minecraft.world.level.LevelReader;
- import net.minecraft.world.level.StructureManager;
- import net.minecraft.world.level.WorldGenLevel;
-+import net.minecraft.world.level.LevelAccessor;
+@@ -45,11 +46,7 @@ import net.minecraft.server.level.ServerLevel;
+ import net.minecraft.server.level.WorldGenRegion;
+ import net.minecraft.util.random.WeightedRandomList;
+ import net.minecraft.world.entity.MobCategory;
+-import net.minecraft.world.level.ChunkPos;
+-import net.minecraft.world.level.LevelHeightAccessor;
+-import net.minecraft.world.level.LevelReader;
+-import net.minecraft.world.level.StructureManager;
+-import net.minecraft.world.level.WorldGenLevel;
++import net.minecraft.world.level.*;
  import net.minecraft.world.level.biome.Biome;
  import net.minecraft.world.level.biome.BiomeGenerationSettings;
  import net.minecraft.world.level.biome.BiomeManager;
-@@ -82,6 +85,7 @@ import net.minecraft.world.level.levelgen.structure.StructureStart;
+@@ -74,8 +71,10 @@ import net.minecraft.world.level.levelgen.structure.StructureStart;
  import net.minecraft.world.level.levelgen.structure.placement.ConcentricRingsStructurePlacement;
  import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement;
  import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement;
 +import net.minecraft.world.level.levelgen.structure.structures.NetherFortressStructure;
  import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
  import org.apache.commons.lang3.mutable.MutableBoolean;
- import org.slf4j.Logger;
-@@ -726,7 +730,43 @@ public abstract class ChunkGenerator {
++import org.bukkit.craftbukkit.generator.strucutre.CraftStructure;
+ 
+ public abstract class ChunkGenerator {
+ 
+@@ -522,7 +521,42 @@ public abstract class ChunkGenerator {
      public WeightedRandomList<MobSpawnSettings.SpawnerData> getMobsAt(Holder<Biome> biome, StructureManager accessor, MobCategory group, BlockPos pos) {
          Map<Structure, LongSet> map = accessor.getAllStructuresAt(pos);
          Iterator iterator = map.entrySet().iterator();
+-
 +        int regionX = pos.getX() >> 9;
 +        int regionZ = pos.getZ() >> 9;
 +        int chunkX = pos.getX() >> 4;
@@ -59,17 +60,16 @@ index 9579889e4c7dedefc4f901ccac6157c425740481..e6c0e76c26ec84b519a4f11cc2e97641
 +                }
 +            }
 +        }
- 
 +        if (structureType != null) {
 +            Structure structure = null;
 +            if ("PILLAGER_OUTPOST".equals(structureType)) {
-+                structure = (Structure) ((Holder.Reference) Structures.PILLAGER_OUTPOST).value();
++                structure = CraftStructure.bukkitToMinecraft(org.bukkit.generator.structure.Structure.PILLAGER_OUTPOST);
 +            }
 +            if ("OCEAN_MONUMENT".equals(structureType)) {
-+                structure = (Structure) ((Holder.Reference) Structures.OCEAN_MONUMENT).value();
++                structure = CraftStructure.bukkitToMinecraft(org.bukkit.generator.structure.Structure.MONUMENT);
 +            }
 +            if ("SWAMP_HUT".equals(structureType)) {
-+                structure = (Structure) ((Holder.Reference) Structures.SWAMP_HUT).value();
++                structure = CraftStructure.bukkitToMinecraft(org.bukkit.generator.structure.Structure.SWAMP_HUT);
 +            }
 +            if ("FORTRESS".equals(structureType)) {
 +                return NetherFortressStructure.FORTRESS_ENEMIES;

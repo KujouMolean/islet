@@ -5,10 +5,10 @@ Subject: [PATCH] fix portal duping
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 285f7c773af4dca07f25b460f518d651c6418409..eeff58d2aeec08ec0d79116b31be57d25e8b431f 100644
+index f5b1ada04d3542f888c417120968588b1f870022..630a52bd5a26e2b25ece6a7c38396e4c6d9b4498 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -2900,7 +2900,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -2919,7 +2919,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
              }
  
              this.processPortalCooldown();
@@ -18,10 +18,10 @@ index 285f7c773af4dca07f25b460f518d651c6418409..eeff58d2aeec08ec0d79116b31be57d2
      }
  
 diff --git a/src/main/java/net/minecraft/world/entity/item/FallingBlockEntity.java b/src/main/java/net/minecraft/world/entity/item/FallingBlockEntity.java
-index b2d1a17867cdbaad0c6e5c2376c716f9461af124..ea19b5757807dc027c7f5fde8e245ea970fa8416 100644
+index 72f1866226269396ba0f0c1be269e237925d9322..7133d96eb5c7af94577ec0443960eddcec3cc05a 100644
 --- a/src/main/java/net/minecraft/world/entity/item/FallingBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/item/FallingBlockEntity.java
-@@ -127,11 +127,13 @@ public class FallingBlockEntity extends Entity {
+@@ -129,11 +129,13 @@ public class FallingBlockEntity extends Entity {
  
      @Override
      public void tick() {
@@ -38,7 +38,7 @@ index b2d1a17867cdbaad0c6e5c2376c716f9461af124..ea19b5757807dc027c7f5fde8e245ea9
          if (this.blockState.isAir()) {
              this.discard();
          } else {
-@@ -144,11 +146,13 @@ public class FallingBlockEntity extends Entity {
+@@ -146,11 +148,13 @@ public class FallingBlockEntity extends Entity {
  
              this.move(MoverType.SELF, this.getDeltaMovement());
  
